@@ -1,36 +1,83 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Behired
 
-## Getting Started
+> Organize e acompanhe seus processos seletivos de forma visual e eficiente.
 
-First, run the development server:
+**Behired** é uma aplicação web pessoal que ajuda profissionais de tecnologia a gerenciarem seus processos seletivos. Com interface limpa e intuitiva, você consegue visualizar rapidamente o status de cada vaga, acompanhar as etapas percorridas e manter um histórico organizado de toda sua jornada de busca por emprego.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 📋 Sobre o Projeto
+
+Este é um projeto orientado a portfolio que demonstra boas práticas de desenvolvimento front-end, com foco em:
+
+- Arquitetura limpa e componentização
+- TypeScript para type safety
+- Design system consistente baseado em Figma
+- UX focada em clareza e facilidade de uso
+
+### Status Atual: MVP (v1 - Front-end)
+
+A versão atual utiliza dados mockados em memória para validação da interface e experiência do usuário antes da implementação do backend.
+
+## 🛠️ Stack Tecnológica
+
+- **Framework**: [Next.js 16](https://nextjs.org) (App Router)
+- **Linguagem**: [TypeScript](https://www.typescriptlang.org/)
+- **Estilização**: [Tailwind CSS v4](https://tailwindcss.com/)
+- **Componentes**: [shadcn/ui](https://ui.shadcn.com/) (New York style)
+- **Fontes**: Azeret Mono, Averia Serif Libre
+- **Ícones**: [Lucide React](https://lucide.dev/)
+
+## 📁 Estrutura do Projeto
+
+```
+src/
+├── app/                    # Páginas e rotas (App Router)
+│   ├── layout.tsx         # Layout raiz com fontes
+│   ├── page.tsx           # Página inicial (grid de processos)
+│   └── globals.css        # Estilos globais e tema
+├── components/            # Componentes React reutilizáveis
+│   ├── ui/               # Componentes shadcn/ui
+│   ├── PageHeader.tsx    # Cabeçalho com logo e menu
+│   └── ProcessCard.tsx   # Card de processo seletivo
+├── lib/                   # Utilitários e helpers
+│   ├── constants.ts      # Status, labels, template padrão
+│   ├── date-utils.ts     # Formatação de datas
+│   ├── mock-data.ts      # Dados mockados para desenvolvimento
+│   └── utils.ts          # Utility functions (cn, etc)
+└── types/                 # Definições TypeScript
+    └── index.ts          # Process, Stage, ProcessStatus
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🎨 Design
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+O design da interface foi criado no Figma e implementado com fidelidade visual, utilizando:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Paleta de cores personalizada
+- Tipografia hierárquica (Averia Serif Libre para branding, Azeret Mono para conteúdo)
+- Cards com sombras sutis e estados de hover
+- Layout responsivo e acessível
 
-## Learn More
+## ✨ Funcionalidades (Planejadas)
 
-To learn more about Next.js, take a look at the following resources:
+### ✅ Implementado (v1 - MVP Front-end)
+- [x] Visualização de processos em card layout
+- [x] Design system baseado em Figma
+- [x] Dados mockados para validação de UI
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 🚧 Em Desenvolvimento
+- [ ] Context API para gerenciamento de estado
+- [ ] Página de detalhes com timeline das etapas
+- [ ] Formulários de criação/edição de processos
+- [ ] Filtros e busca textual
+- [ ] Dialogs para ações (adicionar etapa, encerrar, deletar)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 📅 Próximas Funcionalidades (v2)
+- [ ] Autenticação (GitHub OAuth via BetterAuth)
+- [ ] Persistência com Supabase
+- [ ] Dashboard com métricas
+- [ ] Exportação de dados
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📄 Licença
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Este projeto é de código aberto e está disponível sob a licença MIT.
+
