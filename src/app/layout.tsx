@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import { Averia_Serif_Libre, Azeret_Mono } from "next/font/google";
 import "./globals.css";
 
+import { ProcessProvider } from "@/contexts/ProcessContext";
+
 const azeretMono = Azeret_Mono({
   variable: "--font-azeret",
   subsets: ["latin"],
-  weight: ["400", "700"],
 });
 
 const averiaSerif = Averia_Serif_Libre({
@@ -25,11 +26,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${azeretMono.variable} ${averiaSerif.variable} antialiased`}
-      >
-        {children}
+    <html lang="en" className={`${azeretMono.variable} ${averiaSerif.variable}`}>
+      <body className="antialiased">
+        {/* Provider global para gerenciar estado dos processos */}
+        <ProcessProvider>{children}</ProcessProvider>
       </body>
     </html>
   );
