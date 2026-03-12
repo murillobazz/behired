@@ -18,12 +18,14 @@ export type ProcessFormValues = {
 };
 
 type ProcessFormProps = {
+  initialValues?: Partial<ProcessFormValues>;
   defaultValues?: Partial<ProcessFormValues>;
   showClosedReason?: boolean;
   onSubmit: (values: ProcessFormValues) => void;
 };
 
 export const ProcessForm = ({
+  initialValues,
   defaultValues,
   showClosedReason,
   onSubmit,
@@ -52,7 +54,7 @@ export const ProcessForm = ({
           <Input
             id="company"
             name="company"
-            defaultValue={defaultValues?.company}
+            defaultValue={initialValues?.company ?? defaultValues?.company}
             placeholder="Empresa"
             required
           />
@@ -62,7 +64,7 @@ export const ProcessForm = ({
           <Input
             id="position"
             name="position"
-            defaultValue={defaultValues?.position}
+            defaultValue={initialValues?.position ?? defaultValues?.position}
             placeholder="Cargo"
             required
           />
@@ -73,7 +75,7 @@ export const ProcessForm = ({
         <Textarea
           id="description"
           name="description"
-          defaultValue={defaultValues?.description}
+          defaultValue={initialValues?.description ??  defaultValues?.description}
           placeholder="Resumo da vaga"
         />
       </div>
@@ -84,7 +86,7 @@ export const ProcessForm = ({
             id="startDate"
             name="startDate"
             type="date"
-            defaultValue={defaultValues?.startDate}
+            defaultValue={initialValues?.startDate ?? defaultValues?.startDate}
           />
         </div>
         <div className="space-y-2">
@@ -92,7 +94,7 @@ export const ProcessForm = ({
           <select
             id="status"
             name="status"
-            defaultValue={defaultValues?.status ?? "APPLIED"}
+            defaultValue={initialValues?.status ?? defaultValues?.status ?? "APPLIED"}
             className="h-9 w-full rounded-md border border-[var(--card-border)] bg-white px-3 text-sm shadow-sm outline-none transition-colors focus-visible:border-[var(--brand-green)]"
           >
             <option value="APPLIED">Aplicado</option>
@@ -109,7 +111,7 @@ export const ProcessForm = ({
           <Textarea
             id="closedReason"
             name="closedReason"
-            defaultValue={defaultValues?.closedReason}
+            defaultValue={initialValues?.closedReason ?? defaultValues?.closedReason}
             placeholder="Motivo do encerramento"
           />
         </div>

@@ -138,3 +138,8 @@
     font-family: var(--font-averia), "Times New Roman", serif;
   }
 }
+
+.dnd-grabbing,
+.dnd-grabbing * {
+  cursor: grabbing !important;
+}

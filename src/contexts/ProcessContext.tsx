@@ -47,9 +47,11 @@ export const ProcessProvider = ({ children }: ProcessProviderProps) => {
    */
   const createProcess = useCallback(
     (data: Omit<Process, "id" | "stages">) => {
+      const now = new Date().toISOString();
       const newProcess: Process = {
         ...data,
         id: generateId(),
+        lastModified: now,
         currentStageIndex: 0,
         stages: DEFAULT_STAGES.map((name, index) => ({
           id: generateId(),
@@ -70,9 +72,10 @@ export const ProcessProvider = ({ children }: ProcessProviderProps) => {
    */
   const updateProcess = useCallback(
     (id: string, data: Partial<Process>) => {
+      const now = new Date().toISOString();
       setProcesses((prev) =>
         prev.map((process) =>
-          process.id === id ? { ...process, ...data } : process,
+          process.id === id ? { ...process, ...data, lastModified: now } : process,
         ),
       );
     },
@@ -91,6 +94,7 @@ export const ProcessProvider = ({ children }: ProcessProviderProps) => {
    */
   const closeProcess = useCallback(
     (id: string, reason: string, status: ProcessStatus) => {
+      const now = new Date().toISOString();
       setProcesses((prev) =>
         prev.map((process) =>
           process.id === id
@@ -98,7 +102,8 @@ export const ProcessProvider = ({ children }: ProcessProviderProps) => {
                 ...process,
                 status,
                 closedReason: reason,
-                closedDate: new Date().toISOString().split("T")[0],
+                closedDate: now.split("T")[0],
+                lastModified: now,
               }
             : process,
         ),
@@ -112,11 +117,13 @@ export const ProcessProvider = ({ children }: ProcessProviderProps) => {
    */
   const addStage = useCallback(
     (processId: string, stage: Omit<Stage, "id">) => {
+      const now = new Date().toISOString();
       setProcesses((prev) =>
         prev.map((process) =>
           process.id === processId
             ? {
                 ...process,
+                lastModified: now,
                 stages: [
                   ...process.stages,
                   { ...stage, id: generateId() },
@@ -134,11 +141,13 @@ export const ProcessProvider = ({ children }: ProcessProviderProps) => {
    */
   const updateStage = useCallback(
     (processId: string, stageId: string, data: Partial<Stage>) => {
+      const now = new Date().toISOString();
       setProcesses((prev) =>
         prev.map((process) =>
           process.id === processId
             ? {
                 ...process,
+                lastModified: now,
                 stages: process.stages.map((stage) =>
                   stage.id === stageId ? { ...stage, ...data } : stage,
                 ),
@@ -154,11 +163,13 @@ export const ProcessProvider = ({ children }: ProcessProviderProps) => {
    * Remove uma stage de um processo.
    */
   const deleteStage = useCallback((processId: string, stageId: string) => {
+    const now = new Date().toISOString();
     setProcesses((prev) =>
       prev.map((process) =>
         process.id === processId
           ? {
               ...process,
+              lastModified: now,
               stages: process.stages.filter((stage) => stage.id !== stageId),
             }
           : process,

@@ -13,11 +13,16 @@ export const ProcessCard = ({ process }: { process: Process }) => {
   const isClosed = process.status === "CLOSED";
 
   return (
-    <Link href={`/process/${process.id}`}>
+    <Link
+      href={`/process/${process.id}`}
+      className="block w-full cursor-inherit md:w-[300px]"
+      style={{ cursor: "inherit" }}
+    >
       <article
-        className={`relative w-[300px] rounded border border-[var(--card-border)] bg-white px-4 py-3 shadow-[1px_1px_3px_rgba(0,0,0,0.25)] transition-transform ${
+        className={`relative w-full cursor-inherit rounded border border-[var(--card-border)] bg-white px-4 py-3 shadow-[1px_1px_3px_rgba(0,0,0,0.25)] transition-transform ${
           isClosed ? "opacity-50" : "opacity-90 hover:-translate-y-0.5"
         }`}
+        style={{ cursor: "inherit" }}
       >
         <span
           aria-hidden

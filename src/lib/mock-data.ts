@@ -9,6 +9,7 @@ export const MOCK_PROCESSES: Process[] = [
     description: "Backend com foco em pagamentos e integracoes.",
     status: "IN_PROGRESS",
     startDate: "2025-06-22",
+    lastModified: "2025-07-01T14:30:00.000Z",
     currentStageIndex: 3,
     stages: [
       {
@@ -48,6 +49,7 @@ export const MOCK_PROCESSES: Process[] = [
     description: "Lideranca tecnica e evolucao da plataforma.",
     status: "IN_PROGRESS",
     startDate: "2025-06-26",
+    lastModified: "2025-07-05T10:15:00.000Z",
     currentStageIndex: 1,
     stages: [
       {
@@ -73,6 +75,7 @@ export const MOCK_PROCESSES: Process[] = [
     description: "Projeto de marketing com foco em performance.",
     status: "CLOSED",
     startDate: "2025-06-15",
+    lastModified: "2025-07-10T16:45:00.000Z",
     currentStageIndex: 1,
     closedReason: "Processo encerrado por decisao interna.",
     closedDate: "2025-07-10",

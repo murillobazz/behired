@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { toast } from "sonner";
 
 import { ProcessForm, type ProcessFormValues } from "@/components/forms/ProcessForm";
 import { useProcesses } from "@/hooks/use-processes";
@@ -24,6 +25,7 @@ export default function NewProcessPage() {
       startDate: values.startDate,
       currentStageIndex: 0,
     });
+    toast.success("Processo criado com sucesso!");
 
     // Redireciona para a lista após criar
     router.push("/");

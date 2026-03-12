@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import type { Stage } from "@/types";
 import { formatDate } from "@/lib/date-utils";
 
@@ -10,13 +11,26 @@ const getStageState = (stage: Stage) => {
 
 type ProcessTimelineProps = {
   stages: Stage[];
+  onAddStage?: () => void;
+  onEditStage?: (stage: Stage) => void;
+  onDeleteStage?: (stage: Stage) => void;
 };
 
-export const ProcessTimeline = ({ stages }: ProcessTimelineProps) => {
+export const ProcessTimeline = ({
+  stages,
+  onAddStage,
+  onEditStage,
+  onDeleteStage,
+}: ProcessTimelineProps) => {
+  // Ordena as etapas do processo da mais recente para a mais antiga
+  const sortedStages = [...stages].sort((a, b) => {
+    return new Date(b.date).getTime() - new Date(a.date).getTime();
+  });
+
   return (
-    <div className="mt-6 space-y-4">
+    <div className="mt-3 space-y-4">
       {/* Timeline vertical com etapas do processo */}
-      {stages.map((stage, index) => {
+      {sortedStages.map((stage, index) => {
         const state = getStageState(stage);
         const indicatorClass =
           state === "completed"
@@ -30,11 +44,11 @@ export const ProcessTimeline = ({ stages }: ProcessTimelineProps) => {
                 className={`h-3 w-3 rounded-full ${indicatorClass}`}
                 aria-hidden
               />
-              {index < stages.length - 1 ? (
+              {index < sortedStages.length - 1 ? (
                 <span className="mt-2 h-8 w-px bg-[#cfcfcf]" aria-hidden />
               ) : null}
             </div>
-            <div>
+            <div className="group rounded px-1 py-1 transition-colors hover:bg-[#f7f7f5]">
               <div className="flex items-center gap-3">
                 <h3 className="font-azeret text-[16px] font-bold text-[var(--font-primary)]">
                   {stage.name}
@@ -42,6 +56,25 @@ export const ProcessTimeline = ({ stages }: ProcessTimelineProps) => {
                 <span className="text-xs text-[var(--font-secondary)]">
                   {formatDate(stage.date)}
                 </span>
+                {onEditStage ? (
+                  <Button
+                    size="xs"
+                    variant="ghost"
+                    onClick={() => onEditStage(stage)}
+                  >
+                    Editar
+                  </Button>
+                ) : null}
+                {onDeleteStage ? (
+                  <Button
+                    size="xs"
+                    variant="ghost"
+                    className="text-red-600 hover:text-red-700"
+                    onClick={() => onDeleteStage(stage)}
+                  >
+                    Excluir
+                  </Button>
+                ) : null}
               </div>
               {stage.description ? (
                 <p className="mt-1 text-sm text-[var(--font-secondary)]">
@@ -52,6 +85,11 @@ export const ProcessTimeline = ({ stages }: ProcessTimelineProps) => {
           </div>
         );
       })}
+      {onAddStage ? (
+        <Button variant="outline" className="mt-2" onClick={onAddStage}>
+          + Adicionar etapa
+        </Button>
+      ) : null}
     </div>
   );
 };

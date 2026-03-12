@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Averia_Serif_Libre, Azeret_Mono } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 import { ProcessProvider } from "@/contexts/ProcessContext";
@@ -29,7 +30,10 @@ export default function RootLayout({
     <html lang="en" className={`${azeretMono.variable} ${averiaSerif.variable}`}>
       <body className="antialiased">
         {/* Provider global para gerenciar estado dos processos */}
-        <ProcessProvider>{children}</ProcessProvider>
+        <ProcessProvider>
+          {children}
+          <Toaster richColors position="top-right" />
+        </ProcessProvider>
       </body>
     </html>
   );

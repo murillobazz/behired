@@ -20,6 +20,7 @@ export type Process = {
   description?: string;
   status: ProcessStatus;
   startDate: string;
+  lastModified: string;
   currentStageIndex: number;
   stages: Stage[];
   closedReason?: string;
