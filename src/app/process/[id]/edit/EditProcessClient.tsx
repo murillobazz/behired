@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { toast } from "sonner";
 
 import { ProcessForm, type ProcessFormValues } from "@/components/forms/ProcessForm";
 import { useProcesses } from "@/hooks/use-processes";
@@ -19,7 +20,6 @@ export default function EditProcessClient({ processId }: { processId: string }) 
   if (!process) {
     notFound();
   }
-
   const initialValues: ProcessFormValues = {
     company: process.company,
     position: process.position,
@@ -37,6 +37,7 @@ export default function EditProcessClient({ processId }: { processId: string }) 
       status: values.status,
       startDate: values.startDate,
     });
+    toast.success("Alterações salvas");
 
     // Redireciona para o detalhe após salvar
     router.push(`/process/${processId}`);
@@ -55,7 +56,7 @@ export default function EditProcessClient({ processId }: { processId: string }) 
           Atualize os dados do processo seletivo de {process.position} na {process.company}.
         </p>
         <div className="mt-6">
-          <ProcessForm initialValues={initialValues} onSubmit={handleSubmit} />
+          <ProcessForm key={processId} initialValues={initialValues} onSubmit={handleSubmit} />
         </div>
       </section>
     </div>
