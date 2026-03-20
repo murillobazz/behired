@@ -23,6 +23,7 @@ export default function NewProcessPage() {
       description: values.description,
       status: values.status,
       startDate: values.startDate,
+      lastModified: new Date().toISOString(),
       currentStageIndex: 0,
     });
     toast.success("Processo criado com sucesso!");
