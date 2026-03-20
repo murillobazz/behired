@@ -44,11 +44,11 @@ export default function EditProcessClient({ processId }: { processId: string }) 
   };
 
   return (
-    <div className="min-h-screen bg-[var(--bg-light)] px-12 py-10 animate-fade-in-from-left">
+    <div className="min-h-screen bg-[var(--bg-light)] px-4 py-6 sm:px-6 md:px-10 md:py-10 animate-fade-in-from-left">
       <Link href={`/process/${processId}`} className="underline underline-offset-4">
         ← Voltar ao processo
       </Link>
-      <section className="mt-6 max-w-3xl rounded border border-[var(--card-border)] bg-white p-6 shadow-[1px_1px_3px_rgba(0,0,0,0.15)]">
+      <section className="mt-6 w-full max-w-3xl rounded border border-[var(--card-border)] bg-white p-4 shadow-[1px_1px_3px_rgba(0,0,0,0.15)] sm:p-6">
         <h1 className="text-[20px] font-semibold text-[var(--font-primary)]">
           Editar processo
         </h1>

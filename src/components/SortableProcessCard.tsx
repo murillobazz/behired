@@ -38,7 +38,7 @@ export function SortableProcessCard({ process, index = 0 }: SortableProcessCardP
       }}
       {...attributes}
       {...listeners}
-      className="max-w-[360px] select-none cursor-grab active:cursor-grabbing animate-fade-scale"
+      className="w-full sm:max-w-[360px] select-none touch-manipulation cursor-grab active:cursor-grabbing animate-fade-scale"
     >
       <ProcessCard process={process} />
     </div>

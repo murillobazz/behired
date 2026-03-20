@@ -7,7 +7,8 @@ import {
   DndContext,
   closestCenter,
   KeyboardSensor,
-  PointerSensor,
+  MouseSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   type DragEndEvent,
@@ -37,9 +38,13 @@ export default function Home() {
   );
 
   const sensors = useSensors(
-    useSensor(PointerSensor, {
+    useSensor(MouseSensor, {
       // Exige 8px de movimento antes de ativar o drag, preservando cliques normais.
       activationConstraint: { distance: 8 },
+    }),
+    useSensor(TouchSensor, {
+      // Long press curto para evitar conflito entre scroll/tap e drag no mobile.
+      activationConstraint: { delay: 120, tolerance: 8 },
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,

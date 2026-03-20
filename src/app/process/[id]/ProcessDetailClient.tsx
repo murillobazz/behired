@@ -37,7 +37,7 @@ export const ProcessDetailClient = ({ id }: ProcessDetailClientProps) => {
 
   if (!process) {
     return (
-      <div className="min-h-screen bg-[var(--bg-light)] px-12 py-10 animate-fade-in-from-left">
+      <div className="min-h-screen bg-[var(--bg-light)] px-4 py-6 sm:px-6 md:px-10 md:py-10 animate-fade-in-from-left">
         <Link className="underline underline-offset-4" href="/">
           ← Voltar para processos
         </Link>
@@ -114,7 +114,7 @@ export const ProcessDetailClient = ({ id }: ProcessDetailClientProps) => {
           Excluir
         </Button>
       </div>
-      <section className="w-fit mt-6 rounded border border-[var(--card-border)] bg-white p-6 shadow-[1px_1px_3px_rgba(0,0,0,0.15)]">
+      <section className="mt-6 w-full max-w-4xl rounded border border-[var(--card-border)] bg-white p-4 shadow-[1px_1px_3px_rgba(0,0,0,0.15)] sm:p-6">
         <div className="flex items-center gap-3">
           <Badge color={STATUS_COLORS[process.status]}>
             {STATUS_LABELS[process.status]}
@@ -142,7 +142,7 @@ export const ProcessDetailClient = ({ id }: ProcessDetailClientProps) => {
           </p>
         ) : null}
       </section>
-      <section className="mt-6 w-fit">
+      <section className="mt-6 w-full max-w-4xl">
         <h2 className="font-semibold text-[var(--font-primary)]">
           Linha do tempo
         </h2>
