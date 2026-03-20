@@ -37,7 +37,7 @@ export const ProcessDetailClient = ({ id }: ProcessDetailClientProps) => {
 
   if (!process) {
     return (
-      <div className="min-h-screen bg-[var(--bg-light)] px-12 py-10">
+      <div className="min-h-screen bg-[var(--bg-light)] px-12 py-10 animate-fade-in-from-left">
         <Link className="underline underline-offset-4" href="/">
           ← Voltar para processos
         </Link>
@@ -96,7 +96,7 @@ export const ProcessDetailClient = ({ id }: ProcessDetailClientProps) => {
 
   
   return (
-    <div className="min-h-screen bg-[var(--bg-light)] px-5 pt-6 pb-12 md:px-10">
+    <div className="min-h-screen bg-[var(--bg-light)] px-5 pt-6 pb-12 md:px-10 animate-fade-in-from-left">
       <Link className="underline underline-offset-4" href="/">
         ← Voltar para processos
       </Link>

@@ -32,7 +32,7 @@ export default function NewProcessPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--bg-light)] px-12 py-10">
+    <div className="min-h-screen bg-[var(--bg-light)] px-12 py-10 animate-fade-in-from-left">
       <Link className="underline underline-offset-4" href="/">
         ← Voltar para processos
       </Link>

@@ -4,14 +4,19 @@ import {
   createContext,
   useCallback,
   useMemo,
-  useState,
+  useSyncExternalStore,
   type ReactNode,
 } from "react";
 
 import type { Process, ProcessStatus, Stage } from "@/types";
-import { MOCK_PROCESSES } from "@/lib/mock-data";
 import { generateId } from "@/lib/process-utils";
 import { DEFAULT_STAGES } from "@/lib/constants";
+import {
+  getProcessesSnapshot,
+  getServerProcessesSnapshot,
+  persistProcesses,
+  subscribeToProcesses,
+} from "@/lib/storage-utils";
 
 // Tipo das funções de ação disponíveis no contexto
 type ProcessContextType = {
@@ -34,12 +39,22 @@ type ProcessProviderProps = {
 
 /**
  * Provider que gerencia o estado global dos processos seletivos.
- * Mantém dados em memória durante a sessão (reset ao refresh).
- * Preparado para futura integração com backend.
+ * Persiste dados em localStorage via useSyncExternalStore.
+ * Seed inicial com MOCK_PROCESSES no primeiro acesso (localStorage vazio).
+ * Sincroniza automaticamente entre abas via evento nativo `storage`.
  */
 export const ProcessProvider = ({ children }: ProcessProviderProps) => {
-  // Estado inicial carregado dos dados mockados
-  const [processes, setProcesses] = useState<Process[]>(MOCK_PROCESSES);
+  /**
+   * useSyncExternalStore lê do localStorage como fonte de verdade.
+   * - subscribe: escuta changes da mesma aba e de outras abas
+   * - getProcessesSnapshot: retorna cache em memória ou lê localStorage
+   * - getServerProcessesSnapshot: retorna MOCK_PROCESSES para SSR
+   */
+  const processes = useSyncExternalStore(
+    subscribeToProcesses,
+    getProcessesSnapshot,
+    getServerProcessesSnapshot,
+  );
 
   /**
    * Cria um novo processo com stages padrão.
@@ -58,10 +73,10 @@ export const ProcessProvider = ({ children }: ProcessProviderProps) => {
           name,
           description: "",
           date: data.startDate,
-          completed: index === 0, // Primeira etapa já completada
+          completed: index === 0,
         })),
       };
-      setProcesses((prev) => [newProcess, ...prev]);
+      persistProcesses([newProcess, ...getProcessesSnapshot()]);
     },
     [],
   );
@@ -73,8 +88,8 @@ export const ProcessProvider = ({ children }: ProcessProviderProps) => {
   const updateProcess = useCallback(
     (id: string, data: Partial<Process>) => {
       const now = new Date().toISOString();
-      setProcesses((prev) =>
-        prev.map((process) =>
+      persistProcesses(
+        getProcessesSnapshot().map((process) =>
           process.id === id ? { ...process, ...data, lastModified: now } : process,
         ),
       );
@@ -86,7 +101,7 @@ export const ProcessProvider = ({ children }: ProcessProviderProps) => {
    * Remove um processo permanentemente.
    */
   const deleteProcess = useCallback((id: string) => {
-    setProcesses((prev) => prev.filter((process) => process.id !== id));
+    persistProcesses(getProcessesSnapshot().filter((process) => process.id !== id));
   }, []);
 
   /**
@@ -95,8 +110,8 @@ export const ProcessProvider = ({ children }: ProcessProviderProps) => {
   const closeProcess = useCallback(
     (id: string, reason: string, status: ProcessStatus) => {
       const now = new Date().toISOString();
-      setProcesses((prev) =>
-        prev.map((process) =>
+      persistProcesses(
+        getProcessesSnapshot().map((process) =>
           process.id === id
             ? {
                 ...process,
@@ -118,16 +133,13 @@ export const ProcessProvider = ({ children }: ProcessProviderProps) => {
   const addStage = useCallback(
     (processId: string, stage: Omit<Stage, "id">) => {
       const now = new Date().toISOString();
-      setProcesses((prev) =>
-        prev.map((process) =>
+      persistProcesses(
+        getProcessesSnapshot().map((process) =>
           process.id === processId
             ? {
                 ...process,
                 lastModified: now,
-                stages: [
-                  ...process.stages,
-                  { ...stage, id: generateId() },
-                ],
+                stages: [...process.stages, { ...stage, id: generateId() }],
               }
             : process,
         ),
@@ -142,8 +154,8 @@ export const ProcessProvider = ({ children }: ProcessProviderProps) => {
   const updateStage = useCallback(
     (processId: string, stageId: string, data: Partial<Stage>) => {
       const now = new Date().toISOString();
-      setProcesses((prev) =>
-        prev.map((process) =>
+      persistProcesses(
+        getProcessesSnapshot().map((process) =>
           process.id === processId
             ? {
                 ...process,
@@ -164,8 +176,8 @@ export const ProcessProvider = ({ children }: ProcessProviderProps) => {
    */
   const deleteStage = useCallback((processId: string, stageId: string) => {
     const now = new Date().toISOString();
-    setProcesses((prev) =>
-      prev.map((process) =>
+    persistProcesses(
+      getProcessesSnapshot().map((process) =>
         process.id === processId
           ? {
               ...process,

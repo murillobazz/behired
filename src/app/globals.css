@@ -1,6 +1,70 @@
 @import "tailwindcss";
 /* @import "tw-animate-css"; */
 
+/* ========== Animações de Fade Elegantes ========== */
+@keyframes fadeInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes buttonGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(58, 90, 64, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(58, 90, 64, 0);
+  }
+}
+
+/* ========== Classes de Animação Utilitárias ========== */
+.animate-fade-in-from-left {
+  animation: fadeInFromLeft 600ms cubic-bezier(0.23, 1, 0.320, 1) both;
+}
+
+.animate-fade {
+  animation: fadeIn 600ms cubic-bezier(0.23, 1, 0.320, 1) both;
+}
+
+.animate-fade-scale {
+  animation: fadeInScale 500ms cubic-bezier(0.23, 1, 0.320, 1) both;
+}
+
+.animate-fade-up {
+  animation: fadeInUp 500ms cubic-bezier(0.23, 1, 0.320, 1) both;
+}
+
+.animate-button-glow {
+  animation: buttonGlow 2s infinite;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -139,7 +203,3 @@
   }
 }
 
-.dnd-grabbing,
-.dnd-grabbing * {
-  cursor: grabbing !important;
-}

@@ -9,7 +9,7 @@ type EmptyStateProps = {
 
 export const EmptyState = ({ icon, title, description, action }: EmptyStateProps) => {
   return (
-    <section className="rounded border border-dashed border-[var(--card-border)] bg-white/70 p-8 text-center">
+    <section className="max-w-[360px] rounded border border-dashed border-[var(--card-border)] bg-white/70 p-8 text-center">
       {icon ? <div className="mb-3 flex justify-center text-[var(--font-secondary)]">{icon}</div> : null}
       <h2 className="font-azeret text-[18px] font-semibold text-[var(--font-primary)]">{title}</h2>
       <p className="mt-2 text-sm text-[var(--font-secondary)]">{description}</p>

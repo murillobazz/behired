@@ -1,12 +1,27 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { SearchX } from "lucide-react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 
 import { EmptyState } from "@/components/EmptyState";
 import { PageHeader } from "@/components/PageHeader";
-import { ProcessCard } from "@/components/ProcessCard";
 import { ProcessFilters } from "@/components/ProcessFilters";
+import { SortableProcessCard } from "@/components/SortableProcessCard";
 import { useProcesses } from "@/hooks/use-processes";
 
 export default function Home() {
@@ -20,8 +35,16 @@ export default function Home() {
   const [orderedIds, setOrderedIds] = useState<string[]>(() =>
     processes.map((p) => p.id),
   );
-  const [draggingId, setDraggingId] = useState<string | null>(null);
-  const [dragOverId, setDragOverId] = useState<string | null>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      // Exige 8px de movimento antes de ativar o drag, preservando cliques normais.
+      activationConstraint: { distance: 8 },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
 
   // Deriva a ordem final fundindo a ordem manual com processos novos/removidos
   const mergedIds = useMemo(() => {
@@ -48,25 +71,27 @@ export default function Home() {
       });
   }, [processes, search, status, mergedIds]);
 
-  const handleDrop = (targetId: string) => {
-    if (!draggingId || draggingId === targetId) return;
-    // Usa a ordem já mesclada para manter consistência com filtros e novos itens.
-    const snapshot = mergedIds;
-    const next = snapshot.filter((id) => id !== draggingId);
-    const targetIndex = next.indexOf(targetId);
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const activeId = String(active.id);
+    const overId = String(over.id);
+
+    // Atualiza a ordem completa, mantendo consistência com filtros e itens novos.
+    const next = mergedIds.filter((id) => id !== activeId);
+    const targetIndex = next.indexOf(overId);
     if (targetIndex < 0) {
-      next.push(draggingId);
+      next.push(activeId);
     } else {
-      next.splice(targetIndex, 0, draggingId);
+      next.splice(targetIndex, 0, activeId);
     }
     setOrderedIds(next);
-    setDraggingId(null);
-    setDragOverId(null);
   };
 
   return (
     <div className="min-h-screen bg-[var(--bg-light)] text-[var(--font-primary)]">
-      <main className="px-5 py-6 md:px-10">
+      <main className="px-5 py-6 md:px-10 animate-fade-in-from-left">
         <div className="inline-flex w-fit flex-col items-start">
           <PageHeader
             isFiltersOpen={showFilters}
@@ -83,55 +108,38 @@ export default function Home() {
         </div>
         <section className="mt-8 flex flex-col gap-4">
           {filteredProcesses.length > 0 ? (
-            filteredProcesses.map((process) => (
-              <div
-                key={process.id}
-                draggable
-                onDragStart={(e) => {
-                  setDraggingId(process.id);
-                  document.body.classList.add("dnd-grabbing");
-                  const el = e.currentTarget;
-                  const rect = el.getBoundingClientRect();
-                  // Clona fora da tela com opacidade total para evitar
-                  // que navegadores (especialmente Chromium) escureçam o ghost.
-                  const clone = el.cloneNode(true) as HTMLElement;
-                  clone.style.position = "fixed";
-                  clone.style.top = "-9999px";
-                  clone.style.left = "-9999px";
-                  clone.style.width = `${rect.width}px`;
-                  clone.style.opacity = "1";
-                  document.body.appendChild(clone);
-                  // Ancora o ghost exatamente no ponto em que o usuário clicou.
-                  e.dataTransfer.setDragImage(
-                    clone,
-                    e.clientX - rect.left,
-                    e.clientY - rect.top,
-                  );
-                  requestAnimationFrame(() => document.body.removeChild(clone));
-                }}
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  if (dragOverId !== process.id) setDragOverId(process.id);
-                }}
-                onDrop={() => handleDrop(process.id)}
-                onDragEnd={() => {
-                  document.body.classList.remove("dnd-grabbing");
-                  setDraggingId(null);
-                  setDragOverId(null);
-                }}
-                className={[
-                  "w-full select-none transition-opacity",
-                  draggingId === process.id ? "cursor-grabbing opacity-40" : "cursor-grab opacity-100",
-                  dragOverId === process.id && draggingId !== process.id
-                    ? "rounded outline outline-2 outline-offset-2 outline-[var(--brand-green)]"
-                    : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext
+                items={filteredProcesses.map((p) => p.id)}
+                strategy={verticalListSortingStrategy}
               >
-                <ProcessCard process={process} />
-              </div>
-            ))
+                {filteredProcesses.map((process, index) => (
+                  <SortableProcessCard key={process.id} process={process} index={index} />
+                ))}
+              </SortableContext>
+            </DndContext>
+          ) : processes.length === 0 ? (
+            <EmptyState
+              title="Bem-vindo ao Behired!"
+              description="Organize e acompanhe seus processos seletivos em um só lugar. Crie seu primeiro processo agora mesmo."
+              action={
+                <div className="flex flex-col gap-4">
+                  <Link
+                    href="/process/new"
+                    className="font-azeret text-sm underline text-[var(--brand-green)] hover:opacity-70 transition-opacity"
+                  >
+                    + Criar primeiro processo
+                  </Link>
+                  <p className="text-xs text-[var(--font-secondary)] max-w-xs">
+                    💾 Seus dados ficam salvos automaticamente no seu navegador — sem conta, sem servidor.
+                  </p>
+                </div>
+              }
+            />
           ) : (
             <EmptyState
               icon={<SearchX className="h-5 w-5" />}

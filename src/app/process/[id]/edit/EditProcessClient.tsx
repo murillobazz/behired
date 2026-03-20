@@ -44,7 +44,7 @@ export default function EditProcessClient({ processId }: { processId: string }) 
   };
 
   return (
-    <div className="min-h-screen bg-[var(--bg-light)] px-12 py-10">
+    <div className="min-h-screen bg-[var(--bg-light)] px-12 py-10 animate-fade-in-from-left">
       <Link href={`/process/${processId}`} className="underline underline-offset-4">
         ← Voltar ao processo
       </Link>

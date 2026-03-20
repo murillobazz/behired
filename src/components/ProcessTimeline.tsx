@@ -37,8 +37,10 @@ export const ProcessTimeline = ({
             ? "bg-[#3a5a40]"
             : "border-2 border-[#3a5a40] bg-white";
 
+        const animationDelay = `${index * 50}ms`;
+
         return (
-          <div key={stage.id} className="flex items-start gap-4">
+          <div key={stage.id} className="flex items-start gap-4 animate-fade-up" style={{ animationDelay }}>
             <div className="flex flex-col items-center">
               <span
                 className={`h-3 w-3 rounded-full ${indicatorClass}`}
