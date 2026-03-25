@@ -1,26 +1,30 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { SearchX } from "lucide-react";
 import {
   DndContext,
+  DragOverlay,
   closestCenter,
   KeyboardSensor,
   MouseSensor,
   TouchSensor,
   useSensor,
   useSensors,
-  type DragEndEvent,
+  type DragOverEvent,
+  type DragStartEvent,
 } from "@dnd-kit/core";
 import {
   SortableContext,
+  arrayMove,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
 import { EmptyState } from "@/components/EmptyState";
 import { PageHeader } from "@/components/PageHeader";
+import { ProcessCard } from "@/components/ProcessCard";
 import { ProcessFilters } from "@/components/ProcessFilters";
 import { SortableProcessCard } from "@/components/SortableProcessCard";
 import { useProcesses } from "@/hooks/use-processes";
@@ -37,14 +41,24 @@ export default function Home() {
     processes.map((p) => p.id),
   );
 
+  // Estado do card sendo arrastado e largura capturada do elemento real
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [overlayWidth, setOverlayWidth] = useState<number | null>(null);
+  // Snapshot da ordem antes do drag para restaurar no caso de cancel
+  const preDragOrder = useRef<string[]>([]);
+
+  const activeProcess = activeId
+    ? (processes.find((p) => p.id === activeId) ?? null)
+    : null;
+
   const sensors = useSensors(
     useSensor(MouseSensor, {
       // Exige 8px de movimento antes de ativar o drag, preservando cliques normais.
       activationConstraint: { distance: 8 },
     }),
     useSensor(TouchSensor, {
-      // Long press curto para evitar conflito entre scroll/tap e drag no mobile.
-      activationConstraint: { delay: 120, tolerance: 8 },
+      // Long press de 250ms para diferenciar drag de scroll no mobile.
+      activationConstraint: { delay: 250, tolerance: 12 },
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
@@ -76,22 +90,46 @@ export default function Home() {
       });
   }, [processes, search, status, mergedIds]);
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(String(event.active.id));
+    preDragOrder.current = [...orderedIds];
+    // Captura a largura exata do card arrastado para o overlay replicar
+    const rect = event.active.rect.current?.initial;
+    if (rect) setOverlayWidth(rect.width);
+  };
+
+  const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
-    const activeId = String(active.id);
+    const draggedId = String(active.id);
     const overId = String(over.id);
 
-    // Atualiza a ordem completa, mantendo consistência com filtros e itens novos.
-    const next = mergedIds.filter((id) => id !== activeId);
-    const targetIndex = next.indexOf(overId);
-    if (targetIndex < 0) {
-      next.push(activeId);
-    } else {
-      next.splice(targetIndex, 0, activeId);
-    }
-    setOrderedIds(next);
+    // Reordena em tempo real para que os outros cards se movam enquanto arrasta
+    setOrderedIds((prev) => {
+      const allIds = processes.map((p) => p.id);
+      const merged = [
+        ...prev.filter((id) => allIds.includes(id)),
+        ...allIds.filter((id) => !prev.includes(id)),
+      ];
+      const from = merged.indexOf(draggedId);
+      const to = merged.indexOf(overId);
+      if (from === -1 || to === -1) return prev;
+      return arrayMove(merged, from, to);
+    });
+  };
+
+  const handleDragEnd = () => {
+    // A ordem já foi atualizada progressivamente em onDragOver
+    setActiveId(null);
+    setOverlayWidth(null);
+  };
+
+  const handleDragCancel = () => {
+    // Restaura a ordem original se o drag foi cancelado
+    setActiveId(null);
+    setOverlayWidth(null);
+    setOrderedIds(preDragOrder.current);
   };
 
   return (
@@ -116,7 +154,10 @@ export default function Home() {
             <DndContext
               sensors={sensors}
               collisionDetection={closestCenter}
+              onDragStart={handleDragStart}
+              onDragOver={handleDragOver}
               onDragEnd={handleDragEnd}
+              onDragCancel={handleDragCancel}
             >
               <SortableContext
                 items={filteredProcesses.map((p) => p.id)}
@@ -126,6 +167,20 @@ export default function Home() {
                   <SortableProcessCard key={process.id} process={process} index={index} />
                 ))}
               </SortableContext>
+              <DragOverlay dropAnimation={null}>
+                {activeProcess ? (
+                  <div
+                    style={{
+                      width: overlayWidth ?? undefined,
+                      transform: "rotate(1.5deg) scale(1.03)",
+                      boxShadow: "0 24px 64px rgba(0,0,0,0.3)",
+                      cursor: "grabbing",
+                    }}
+                  >
+                    <ProcessCard process={activeProcess} />
+                  </div>
+                ) : null}
+              </DragOverlay>
             </DndContext>
           ) : processes.length === 0 ? (
             <EmptyState

@@ -6,8 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
 import { Textarea } from "@/components/ui/Textarea";
+import { DEFAULT_STAGES } from "@/lib/constants";
 import type { Stage } from "@/types";
 import { Dialog } from "./Dialog";
+
+const STAGE_OPTIONS = [...DEFAULT_STAGES, "Outro"];
 
 type StageDialogProps = {
   open: boolean;
@@ -23,27 +26,43 @@ export const StageDialog = ({
   initialValues,
 }: StageDialogProps) => {
   const today = new Date().toISOString().split("T")[0];
-  const [name, setName] = useState(initialValues?.name ?? "");
+
+  const getInitialSelect = (name?: string) => {
+    if (!name) return DEFAULT_STAGES[0];
+    return DEFAULT_STAGES.includes(name) ? name : "Outro";
+  };
+
+  const [selectedOption, setSelectedOption] = useState(() => getInitialSelect(initialValues?.name));
+  const [customName, setCustomName] = useState(
+    initialValues?.name && !DEFAULT_STAGES.includes(initialValues.name)
+      ? initialValues.name
+      : "",
+  );
   const [description, setDescription] = useState(initialValues?.description ?? "");
   const [date, setDate] = useState(initialValues?.date ?? today);
   const [completed, setCompleted] = useState(initialValues?.completed ?? false);
 
-  // Reidrata os campos ao abrir o modal para refletir os valores atuais.
   useEffect(() => {
     if (open) {
-      setName(initialValues?.name ?? "");
+      setSelectedOption(getInitialSelect(initialValues?.name));
+      setCustomName(
+        initialValues?.name && !DEFAULT_STAGES.includes(initialValues.name)
+          ? initialValues.name
+          : "",
+      );
       setDescription(initialValues?.description ?? "");
       setDate(initialValues?.date ?? today);
       setCompleted(initialValues?.completed ?? false);
     }
-    // Mantemos apenas "open" para resetar o formulário a cada abertura.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
+  const effectiveName = selectedOption === "Outro" ? customName : selectedOption;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return;
-    onConfirm({ name: name.trim(), description: description.trim(), date, completed });
+    if (!effectiveName.trim()) return;
+    onConfirm({ name: effectiveName.trim(), description: description.trim(), date, completed });
   };
 
   const isEditing = !!initialValues;
@@ -56,16 +75,36 @@ export const StageDialog = ({
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <Label htmlFor="stage-name">Nome</Label>
-          <Input
+          <Label htmlFor="stage-name">Nome da etapa</Label>
+          <select
             id="stage-name"
-            className="mt-1"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Ex: Entrevista técnica"
-            required
-          />
+            className="mt-1 w-full rounded border border-[var(--card-border)] bg-white px-3 py-2 font-azeret text-sm text-[var(--font-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--brand-green)]"
+            value={selectedOption}
+            onChange={(e) => setSelectedOption(e.target.value)}
+          >
+            {STAGE_OPTIONS.map((opt) => (
+              <option key={opt} value={opt}>
+                {opt}
+              </option>
+            ))}
+          </select>
         </div>
+
+        {selectedOption === "Outro" && (
+          <div>
+            <Label htmlFor="stage-custom-name">Nome personalizado</Label>
+            <Input
+              id="stage-custom-name"
+              className="mt-1"
+              value={customName}
+              onChange={(e) => setCustomName(e.target.value)}
+              placeholder="Ex: Entrevista com CTO"
+              required
+              autoFocus
+            />
+          </div>
+        )}
+
         <div>
           <Label htmlFor="stage-desc">Descrição (opcional)</Label>
           <Textarea

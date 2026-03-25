@@ -10,7 +10,6 @@ import {
 
 import type { Process, ProcessStatus, Stage } from "@/types";
 import { generateId } from "@/lib/process-utils";
-import { DEFAULT_STAGES } from "@/lib/constants";
 import {
   getProcessesSnapshot,
   getServerProcessesSnapshot,
@@ -57,8 +56,7 @@ export const ProcessProvider = ({ children }: ProcessProviderProps) => {
   );
 
   /**
-   * Cria um novo processo com stages padrão.
-   * Gera ID único e adiciona template de etapas.
+   * Cria um novo processo apenas com a etapa inicial de Aplicação.
    */
   const createProcess = useCallback(
     (data: Omit<Process, "id" | "stages">) => {
@@ -68,13 +66,15 @@ export const ProcessProvider = ({ children }: ProcessProviderProps) => {
         id: generateId(),
         lastModified: now,
         currentStageIndex: 0,
-        stages: DEFAULT_STAGES.map((name, index) => ({
-          id: generateId(),
-          name,
-          description: "",
-          date: data.startDate,
-          completed: index === 0,
-        })),
+        stages: [
+          {
+            id: generateId(),
+            name: "Aplicação",
+            description: "",
+            date: data.startDate,
+            completed: true,
+          },
+        ],
       };
       persistProcesses([newProcess, ...getProcessesSnapshot()]);
     },

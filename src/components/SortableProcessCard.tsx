@@ -21,26 +21,29 @@ export function SortableProcessCard({ process, index = 0 }: SortableProcessCardP
     isDragging,
   } = useSortable({ id: process.id });
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.4 : 1,
-  };
-
-  const animationDelay = `${index * 50}ms`;
-
   return (
     <div
       ref={setNodeRef}
       style={{
-        ...style,
-        animationDelay,
+        // CSS.Translate evita conflito com animations CSS que usam transform (scale)
+        transform: CSS.Translate.toString(transform),
+        transition,
+        // Invisível durante drag — DragOverlay renderiza o clone flutuante
+        opacity: isDragging ? 0.5 : 1,
+        // Impede que o browser intercepte touches como scroll durante drag
+        touchAction: "none",
       }}
       {...attributes}
       {...listeners}
-      className="w-full sm:max-w-[360px] select-none touch-manipulation cursor-grab active:cursor-grabbing animate-fade-scale"
+      className="w-full sm:max-w-[360px] select-none cursor-grab active:cursor-grabbing"
     >
-      <ProcessCard process={process} />
+      {/* Animação de entrada aplicada no filho para não conflitar com transforms do DnD */}
+      <div
+        className="animate-fade-scale"
+        style={{ animationDelay: `${index * 50}ms` }}
+      >
+        <ProcessCard process={process} />
+      </div>
     </div>
   );
 }
