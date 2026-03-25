@@ -51,17 +51,18 @@ export const ProcessTimeline = ({
               ) : null}
             </div>
             <div className="group rounded px-1 py-1 transition-colors hover:bg-[#f7f7f5]">
-              <div className="flex items-center gap-3">
-                <h3 className="font-azeret text-[16px] font-bold text-[var(--font-primary)]">
+              <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
+                <h3 className="font-azeret text-[16px] font-bold text-[var(--font-primary)] break-words min-w-0">
                   {stage.name}
                 </h3>
-                <span className="text-xs text-[var(--font-secondary)]">
+                <span className="shrink-0 text-xs text-[var(--font-secondary)]">
                   {formatDate(stage.date)}
                 </span>
                 {onEditStage ? (
                   <Button
                     size="xs"
                     variant="ghost"
+                    className="shrink-0"
                     onClick={() => onEditStage(stage)}
                   >
                     Editar
@@ -71,7 +72,7 @@ export const ProcessTimeline = ({
                   <Button
                     size="xs"
                     variant="ghost"
-                    className="text-red-600 hover:text-red-700"
+                    className="shrink-0 text-red-600 hover:text-red-700"
                     onClick={() => onDeleteStage(stage)}
                   >
                     Excluir

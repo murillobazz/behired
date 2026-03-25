@@ -28,6 +28,8 @@ type ProcessContextType = {
   updateStage: (processId: string, stageId: string, data: Partial<Stage>) => void;
   deleteStage: (processId: string, stageId: string) => void;
   getProcessById: (id: string) => Process | undefined;
+  exportProcesses: () => void;
+  importProcesses: (file: File) => Promise<void>;
 };
 
 export const ProcessContext = createContext<ProcessContextType | undefined>(undefined);
@@ -200,6 +202,25 @@ export const ProcessProvider = ({ children }: ProcessProviderProps) => {
     [processes],
   );
 
+  const exportProcesses = useCallback(() => {
+    const data = getProcessesSnapshot();
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `behired-backup-${new Date().toISOString().split("T")[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, []);
+
+  const importProcesses = useCallback(async (file: File): Promise<void> => {
+    const text = await file.text();
+    const data = JSON.parse(text);
+    if (!Array.isArray(data)) throw new Error("Formato inválido");
+    persistProcesses(data as Process[]);
+  }, []);
+
   // Memoiza o valor do contexto para evitar re-renders desnecessários
   const value = useMemo(
     () => ({
@@ -212,6 +233,8 @@ export const ProcessProvider = ({ children }: ProcessProviderProps) => {
       updateStage,
       deleteStage,
       getProcessById,
+      exportProcesses,
+      importProcesses,
     }),
     [
       processes,
@@ -223,6 +246,8 @@ export const ProcessProvider = ({ children }: ProcessProviderProps) => {
       updateStage,
       deleteStage,
       getProcessById,
+      exportProcesses,
+      importProcesses,
     ],
   );
 

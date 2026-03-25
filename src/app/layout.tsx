@@ -46,7 +46,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${azeretMono.variable} ${averiaSerif.variable}`}>
-      <body className="antialiased">
+      <body>
         <PwaRegister />
         {/* Provider global para gerenciar estado dos processos */}
         <ProcessProvider>

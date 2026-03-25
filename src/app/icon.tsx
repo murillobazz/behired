@@ -26,7 +26,7 @@ export default function Icon() {
           borderRadius: 64,
         }}
       >
-        B
+        Be
       </div>
     ),
     {
