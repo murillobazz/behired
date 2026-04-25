@@ -79,24 +79,25 @@ O design da interface foi criado no Figma e implementado com fidelidade visual, 
 
 ## ✨ Funcionalidades
 
-### ✅ Implementado (v1 - MVP Local-First)
-- [x] Visualização de processos em card layout
-- [x] Persistência de dados em browser storage
-- [x] Design system baseado em Figma
-- [x] Context API para gerenciamento de estado
-
-### 🚧 Em Desenvolvimento
-- [ ] Página de detalhes com timeline das etapas
-- [ ] Formulários de criação/edição de processos
-- [ ] Filtros e busca textual
-- [ ] Dialogs para ações (adicionar etapa, encerrar, deletar)
-- [ ] Drag & drop para organizar processos
-- [ ] Temas claro/escuro
+### ✅ Implementado
+- [x] Visualização de processos em card layout com status visual
+- [x] Persistência de dados em `localStorage` via `useSyncExternalStore`
+- [x] Context API para gerenciamento de estado global
+- [x] Página de detalhes do processo com timeline de etapas
+- [x] Formulário de criação de novo processo
+- [x] Formulário de edição de processo existente
+- [x] Timeline de etapas com suporte a adicionar, editar e excluir
+- [x] Filtros por status e ordenação de processos
+- [x] Dialogs modais para adicionar/editar etapas
+- [x] Dialog de encerramento de processo (com motivo)
+- [x] Dialog de confirmação de exclusão
+- [x] Drag & drop para reordenar processos na lista
+- [x] Exportação de dados em JSON
+- [x] Importação de backup JSON
+- [x] PWA com Service Worker (funciona offline, instalável)
+- [x] Design system com paleta chalk e tipografia editorial
 
 ### 📅 Futuras Melhorias
-- [ ] Exportação de dados (JSON, CSV)
-- [ ] Sincronização opcional com nuvem (opt-in)
-- [ ] Backup automático em arquivo
 - [ ] Estatísticas e análises de processos
 
 
