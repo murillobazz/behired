@@ -11,7 +11,7 @@ export const Input = React.forwardRef<
       ref={ref}
       type={type}
       className={cn(
-        "flex h-9 w-full rounded-md border border-[var(--card-border)] bg-white px-3 py-1 text-sm shadow-sm outline-none transition-colors focus-visible:border-[var(--brand-green)]",
+        "flex h-9 w-full rounded-md border border-[var(--card-border)] bg-[var(--card-bg)] px-3 py-1 text-sm shadow-sm outline-none transition-colors focus-visible:border-[var(--brand-green)]",
         className,
       )}
       {...props}

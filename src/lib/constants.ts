@@ -18,11 +18,11 @@ export const STATUS_COLORS: Record<ProcessStatus, string> = {
 };
 
 export const DEFAULT_STAGES = [
-  "Aplicacao",
+  "Aplicação",
   "Triagem",
   "Entrevista RH",
-  "Desafio tecnico",
-  "Entrevista tecnica",
+  "Desafio técnico",
+  "Entrevista técnica",
   "Entrevista cultural",
   "Proposta",
 ];

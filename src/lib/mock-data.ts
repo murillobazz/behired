@@ -6,7 +6,7 @@ export const MOCK_PROCESSES: Process[] = [
     id: "process-1",
     company: "Nubank",
     position: "Software Engineer II",
-    description: "Backend com foco em pagamentos e integracoes.",
+    description: "Backend com foco em pagamentos e integrações.",
     status: "IN_PROGRESS",
     startDate: "2025-06-22",
     lastModified: "2025-07-01T14:30:00.000Z",
@@ -14,8 +14,8 @@ export const MOCK_PROCESSES: Process[] = [
     stages: [
       {
         id: "stage-1",
-        name: "Aplicacao",
-        description: "Envio do curriculo e portfolio.",
+        name: "Aplicação",
+        description: "Envio do currículo e portfólio.",
         date: "2025-06-22",
         completed: true,
       },
@@ -35,8 +35,8 @@ export const MOCK_PROCESSES: Process[] = [
       },
       {
         id: "stage-4",
-        name: "Entrevista tecnica",
-        description: "Arquitetura e resolucao de problemas.",
+        name: "Entrevista técnica",
+        description: "Arquitetura e resolução de problemas.",
         date: "2025-07-01",
         completed: false,
       },
@@ -46,7 +46,7 @@ export const MOCK_PROCESSES: Process[] = [
     id: "process-2",
     company: "Mercado Livre",
     position: "Software Architect",
-    description: "Lideranca tecnica e evolucao da plataforma.",
+    description: "Liderança técnica e evolução da plataforma.",
     status: "IN_PROGRESS",
     startDate: "2025-06-26",
     lastModified: "2025-07-05T10:15:00.000Z",
@@ -54,8 +54,8 @@ export const MOCK_PROCESSES: Process[] = [
     stages: [
       {
         id: "stage-5",
-        name: "Aplicacao",
-        description: "Envio do curriculo.",
+        name: "Aplicação",
+        description: "Envio do currículo.",
         date: "2025-06-26",
         completed: true,
       },
@@ -77,13 +77,13 @@ export const MOCK_PROCESSES: Process[] = [
     startDate: "2025-06-15",
     lastModified: "2025-07-10T16:45:00.000Z",
     currentStageIndex: 1,
-    closedReason: "Processo encerrado por decisao interna.",
+    closedReason: "Processo encerrado por decisão interna.",
     closedDate: "2025-07-10",
     stages: [
       {
         id: "stage-7",
-        name: "Aplicacao",
-        description: "Envio do curriculo.",
+        name: "Aplicação",
+        description: "Envio do currículo.",
         date: "2025-06-15",
         completed: true,
       },

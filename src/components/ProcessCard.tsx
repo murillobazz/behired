@@ -23,50 +23,55 @@ export const ProcessCard = ({ process }: { process: Process }) => {
 
   return (
     <article
-      className={`relative w-full rounded border border-[var(--card-border)] bg-white px-4 py-3 shadow-[1px_1px_3px_rgba(0,0,0,0.25)] ${
-        isClosed ? "opacity-50" : "opacity-90"
+      className={`relative w-full rounded border border-[var(--card-border)] bg-[var(--card-bg)] px-5 py-4 shadow-[0_2px_12px_rgba(0,0,0,0.05),0_1px_3px_rgba(0,0,0,0.06)] transition-shadow hover:shadow-[0_4px_20px_rgba(0,0,0,0.09),0_1px_4px_rgba(0,0,0,0.07)] ${
+        isClosed ? "opacity-40" : ""
       }`}
     >
+      {/* Indicador de status no canto — linha fina em L */}
       <span
         aria-hidden
-        className="absolute right-0 top-0 h-4 w-4 rounded-tr border-r-2 border-t-2"
+        className="absolute right-0 top-0 h-5 w-5 rounded-tr border-r border-t"
         style={{ borderColor: STATUS_COLORS[process.status] }}
       />
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0">
-          <p className="font-azeret text-[16px] text-[var(--font-primary)] truncate">
+
+      {/* Linha superior: cargo + empresa / data de início */}
+      <div className="flex items-start justify-between gap-6">
+        <div className="min-w-0 flex-1">
+          <p className="font-azeret text-[11px] uppercase tracking-[0.1em] text-[var(--font-secondary)] leading-none mb-1.5 truncate">
             {process.position}
           </p>
-          <p className="font-azeret text-[14px] font-bold text-[var(--font-primary)] truncate">
+          <p className="font-azeret text-[15px] font-bold text-[var(--font-primary)] truncate leading-snug">
             {process.company}
           </p>
         </div>
-        <div className="">
-          <span className="font-azeret text-xs text-[var(--font-secondary)] opacity-60 leading-tight">
-            Início há{" "}
-          </span>
-          <span className="font-azeret text-xs text-[var(--font-primary)] leading-tight">
-            {getDaysAgo(process.startDate)}
-          </span>
-        </div>
+        <p className="font-azeret text-[11px] text-[var(--font-secondary)] opacity-60 shrink-0 leading-none mt-0.5 tabular-nums">
+          há {getDaysAgo(process.startDate)}
+        </p>
       </div>
-      <div className="mt-3 flex items-center gap-2">
-        <span className="inline-flex h-4 w-2 shrink-0 items-center justify-center">
-          <span className="h-2.5 w-2.5 rounded-full bg-[var(--font-primary)]" />
+
+      {/* Divisória sutil */}
+      <div className="mt-4 mb-3.5 h-px bg-[var(--card-border)] opacity-40" />
+
+      {/* Linha inferior: etapa atual / data / link */}
+      <div className="flex items-center gap-3">
+        <span
+          aria-hidden
+          className="h-[6px] w-[6px] shrink-0 rounded-full"
+          style={{ backgroundColor: STATUS_COLORS[process.status] }}
+        />
+        <span className="font-azeret text-[13px] text-[var(--font-secondary)] min-w-0 flex-1 truncate">
+          {displayStage?.name ?? "—"}
         </span>
-        <span className="font-azeret text-[14px] text-[var(--font-secondary)] min-w-0 flex-1 truncate">
-          {displayStage?.name ?? "-"}
-        </span>
-        <span className="font-azeret text-[13px] text-[var(--font-primary)] shrink-0">
-          {displayStage ? formatDate(displayStage.date) : "-"}
+        <span className="font-azeret text-[12px] text-[var(--font-secondary)] opacity-50 shrink-0 tabular-nums">
+          {displayStage ? formatDate(displayStage.date) : "—"}
         </span>
         <Link
           href={`/process/${process.id}`}
           aria-label={`Ver detalhes: ${process.position} na ${process.company}`}
-          className="inline-flex shrink-0 items-center justify-center h-8 w-8 rounded-full border border-[var(--font-secondary)] text-[var(--font-secondary)] transition-all hover:bg-[var(--brand-green)] hover:text-white hover:border-[var(--brand-green)]"
+          className="ml-0.5 inline-flex shrink-0 items-center justify-center h-7 w-7 rounded-full border border-[var(--card-border)] text-[var(--font-secondary)] transition-all hover:bg-[var(--brand-green)] hover:text-white hover:border-[var(--brand-green)]"
           onClick={(e) => e.stopPropagation()}
         >
-          <ArrowUpRight className="h-4 w-4" />
+          <ArrowUpRight className="h-3.5 w-3.5" />
         </Link>
       </div>
     </article>

@@ -33,20 +33,18 @@ export default function NewProcessPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--bg-light)] px-4 py-6 sm:px-6 md:px-10 md:py-10 animate-fade-in-from-left">
-      <Link className="underline underline-offset-4" href="/">
-        ← Voltar para processos
+    <div className="min-h-screen bg-[var(--bg-light)] px-5 pt-6 pb-12 md:px-10 animate-fade-in-from-left">
+      <Link
+        className="font-azeret text-[13px] text-[var(--font-secondary)] underline underline-offset-4 hover:text-[var(--font-primary)] transition-colors"
+        href="/"
+      >
+        ← Voltar
       </Link>
-      <section className="mt-6 w-full max-w-3xl rounded border border-[var(--card-border)] bg-white p-4 shadow-[1px_1px_3px_rgba(0,0,0,0.15)] sm:p-6">
-        <h1 className="text-[20px] font-semibold text-[var(--font-primary)]">
-          Criar novo processo
-        </h1>
-        <p className="mt-2 text-sm text-[var(--font-secondary)]">
-          Preencha os dados principais da vaga.
+      <section className="mt-5 w-full max-w-2xl rounded border border-[var(--card-border)] bg-[var(--card-bg)] px-5 py-5 shadow-[0_2px_12px_rgba(0,0,0,0.05),0_1px_3px_rgba(0,0,0,0.06)]">
+        <p className="font-azeret text-[11px] uppercase tracking-[0.1em] text-[var(--font-primary)] mb-5">
+          Novo processo
         </p>
-        <div className="mt-6">
-          <ProcessForm onSubmit={handleSubmit} />
-        </div>
+        <ProcessForm onSubmit={handleSubmit} onCancel={() => router.push("/")} />
       </section>
     </div>
   );

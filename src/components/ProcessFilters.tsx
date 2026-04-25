@@ -33,7 +33,7 @@ export const ProcessFilters = ({
           <Label htmlFor="status">Status</Label>
           <select
             id="status"
-            className="h-9 rounded-md border border-[var(--card-border)] bg-white px-3 text-sm shadow-sm outline-none transition-colors focus-visible:border-[var(--brand-green)]"
+            className="h-9 rounded-md border border-[var(--card-border)] bg-[var(--card-bg)] px-3 text-sm shadow-sm outline-none transition-colors focus-visible:border-[var(--brand-green)]"
             value={status}
             onChange={(event) => onStatusChange(event.target.value)}
           >

@@ -120,11 +120,12 @@
 }
 
 :root {
-  --bg-light: #f5f4ef;
+  --bg-light: #f2f0e8;
   --brand-green: #3a5a40;
-  --font-primary: #333333;
-  --font-secondary: #666666;
-  --card-border: #cccccc;
+  --font-primary: #1c1a14;
+  --font-secondary: #6b6455;
+  --card-border: #dedad0;
+  --card-bg: #faf9f5;
   --radius: 0.625rem;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);

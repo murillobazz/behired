@@ -43,7 +43,7 @@ export const PageHeader = ({
       <h1 className="font-averia text-[40px] leading-none text-[var(--brand-green)]">
         Behired
       </h1>
-      <nav className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-black">
+      <nav className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-black">
         <Link href="/process/new">
           + <span className="underline underline-offset-4">Novo</span>
         </Link>
@@ -98,7 +98,7 @@ export const PageHeader = ({
                 className="fixed inset-0 z-10"
                 onClick={() => setHelpOpen(false)}
               />
-              <div className="absolute md:left-0 left-[-85px] top-7 z-20 w-72 rounded border border-[var(--card-border)] bg-white p-4 shadow-[2px_4px_12px_rgba(0,0,0,0.12)]">
+              <div className="absolute md:left-0 left-[-85px] top-7 z-20 w-72 rounded border border-[var(--card-border)] bg-[var(--card-bg)] p-4 shadow-[2px_4px_12px_rgba(0,0,0,0.12)]">
                 <ul className="space-y-3">
                   {HELP_ITEMS.map((item) => (
                     <li key={item.label}>

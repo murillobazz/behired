@@ -1,13 +1,5 @@
-import { Button } from "@/components/ui/button";
 import type { Stage } from "@/types";
 import { formatDate } from "@/lib/date-utils";
-
-const getStageState = (stage: Stage) => {
-  if (stage.completed) {
-    return "completed";
-  }
-  return "current";
-};
 
 type ProcessTimelineProps = {
   stages: Stage[];
@@ -22,77 +14,103 @@ export const ProcessTimeline = ({
   onEditStage,
   onDeleteStage,
 }: ProcessTimelineProps) => {
-  // Ordena as etapas do processo da mais recente para a mais antiga
-  const sortedStages = [...stages].sort((a, b) => {
-    return new Date(b.date).getTime() - new Date(a.date).getTime();
-  });
+  const sortedStages = [...stages].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+  );
 
   return (
-    <div className="mt-3 space-y-4">
-      {/* Timeline vertical com etapas do processo */}
+    <div className="mt-4">
       {sortedStages.map((stage, index) => {
-        const state = getStageState(stage);
-        const indicatorClass =
-          state === "completed"
-            ? "bg-[#3a5a40]"
-            : "border-2 border-[#3a5a40] bg-white";
-
+        const isDone = stage.completed;
+        const isLast = index === sortedStages.length - 1;
         const animationDelay = `${index * 50}ms`;
 
         return (
-          <div key={stage.id} className="flex items-start gap-4 animate-fade-up" style={{ animationDelay }}>
+          <div
+            key={stage.id}
+            className="flex items-stretch animate-fade-up"
+            style={{ animationDelay }}
+          >
+            {/* Coluna de data — estilo ledger/arquivo */}
+            <div className="w-[68px] shrink-0 pt-[1px] pr-3 text-right">
+              <span
+                className="font-azeret text-[10px] tabular-nums leading-none tracking-wide text-[var(--font-secondary)] opacity-50"
+              >
+                {formatDate(stage.date)}
+              </span>
+            </div>
+
+            {/* Ponto + linha conectora */}
             <div className="flex flex-col items-center">
               <span
-                className={`h-3 w-3 rounded-full ${indicatorClass}`}
                 aria-hidden
+                className={`mt-[1px] h-[7px] w-[7px] shrink-0 rounded-full transition-colors ${
+                  isDone
+                    ? "bg-[var(--brand-green)]"
+                    : "border border-[var(--brand-green)] bg-[var(--bg-light)]"
+                }`}
               />
-              {index < sortedStages.length - 1 ? (
-                <span className="mt-2 h-8 w-px bg-[#cfcfcf]" aria-hidden />
-              ) : null}
+              {!isLast && (
+                <span
+                  aria-hidden
+                  className="mt-2 flex-1 w-px bg-[var(--card-border)] opacity-40"
+                />
+              )}
             </div>
-            <div className="group rounded px-1 py-1 transition-colors hover:bg-[#f7f7f5]">
-              <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
-                <h3 className="font-azeret text-[16px] font-bold text-[var(--font-primary)] break-words min-w-0">
-                  {stage.name}
-                </h3>
-                <span className="shrink-0 text-xs text-[var(--font-secondary)]">
-                  {formatDate(stage.date)}
-                </span>
-                {onEditStage ? (
-                  <Button
-                    size="xs"
-                    variant="ghost"
-                    className="shrink-0"
-                    onClick={() => onEditStage(stage)}
-                  >
-                    Editar
-                  </Button>
-                ) : null}
-                {onDeleteStage ? (
-                  <Button
-                    size="xs"
-                    variant="ghost"
-                    className="shrink-0 text-red-600 hover:text-red-700"
-                    onClick={() => onDeleteStage(stage)}
-                  >
-                    Excluir
-                  </Button>
-                ) : null}
-              </div>
+
+            {/* Conteúdo */}
+            <div className="group flex-1 pl-4 pb-6">
+              <h3 className="font-azeret text-[13px] font-bold text-[var(--font-primary)] leading-none">
+                {stage.name}
+              </h3>
               {stage.description ? (
-                <p className="mt-1 text-sm text-[var(--font-secondary)]">
+                <p className="mt-1.5 font-azeret text-[12px] text-[var(--font-secondary)] leading-relaxed">
                   {stage.description}
                 </p>
               ) : null}
+
+              {/* Ações — mesma linguagem do restante do UI */}
+              {(onEditStage || onDeleteStage) && (
+                <div className="mt-2 flex items-center gap-4">
+                  {onEditStage && (
+                    <button
+                      type="button"
+                      onClick={() => onEditStage(stage)}
+                      className="font-azeret text-[11px] text-[var(--font-secondary)] underline underline-offset-2 opacity-100 md:opacity-0 md:group-hover:opacity-60 hover:!opacity-100 transition-opacity cursor-pointer"
+                    >
+                      Editar
+                    </button>
+                  )}
+                  {onDeleteStage && (
+                    <button
+                      type="button"
+                      onClick={() => onDeleteStage(stage)}
+                      className="font-azeret text-[11px] text-red-400 underline underline-offset-2 opacity-100 md:opacity-0 md:group-hover:opacity-60 hover:!opacity-100 transition-opacity cursor-pointer"
+                    >
+                      Excluir
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         );
       })}
-      {onAddStage ? (
-        <Button variant="outline" className="mt-2" onClick={onAddStage}>
-          + Adicionar etapa
-        </Button>
-      ) : null}
+
+      {/* Botão de adição alinhado à coluna de conteúdo */}
+      {onAddStage && (
+        <div className="flex items-center">
+          <div className="w-[68px] shrink-0" />
+          <div className="w-[7px] shrink-0" />
+          <button
+            type="button"
+            onClick={onAddStage}
+            className="ml-4 font-azeret text-[12px] text-[var(--font-secondary)] underline underline-offset-4 hover:text-[var(--font-primary)] transition-colors cursor-pointer"
+          >
+            + Adicionar etapa
+          </button>
+        </div>
+      )}
     </div>
   );
 };

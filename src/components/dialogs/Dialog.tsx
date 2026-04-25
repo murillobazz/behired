@@ -32,14 +32,14 @@ export const Dialog = ({ open, onClose, title, children }: DialogProps) => {
         role="dialog"
         aria-modal="true"
         aria-labelledby="dialog-title"
-        className="relative z-10 mx-4 w-full max-w-md rounded border border-[var(--card-border)] bg-white p-6 shadow-lg"
+        className="relative z-10 mx-4 w-full max-w-md rounded border border-[var(--card-border)] bg-[var(--card-bg)] p-6 shadow-[0_2px_12px_rgba(0,0,0,0.05),0_1px_3px_rgba(0,0,0,0.06)]"
       >
-        <h2
+        <p
           id="dialog-title"
-          className="mb-4 text-[18px] font-semibold text-[var(--font-primary)]"
+          className="font-azeret text-[11px] uppercase tracking-[0.1em] text-[var(--font-primary)] mb-5"
         >
           {title}
-        </h2>
+        </p>
         {children}
       </div>
     </div>
